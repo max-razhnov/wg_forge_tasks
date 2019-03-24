@@ -146,7 +146,7 @@ export function createUser(login, password) {
           countUp++;
         }
       }
-      if (countUp === password.length || countDown === password.length) {
+      if (countUp === obj.password.length || countDown === obj.password.length) {
         return true;
       }
       else {
