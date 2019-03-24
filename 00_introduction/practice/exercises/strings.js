@@ -36,40 +36,5 @@ Example:
 Note: String has .split(separator) method where seprator is another string
 */
 export function wordsCount(string) {
-  return string.split(' ')
-    .filter(function (n) { return n != '' })
-    .length;
-  // let count = 0;
-  // let str = [...string].join('').trim();
-  // str.trim();
-  // let arr = str.split(',')
-  // str = arr.join('');
-  // if (str.length !== 0) {
-  //   for (let i = 0; i < str.length; i++) {
-  //     if (str[i] === '.') {
-  //       arr = str.split('.');
-  //       str = arr.join('');
-  //       i = 0;
-  //     }
-  //     else if (str[i] === '?') {
-  //       arr = str.split('?');
-  //       str = arr.join('');
-  //       i = 0;
-  //     }
-  //     else if (str[i] === '!') {
-  //       arr = str.split('!');
-  //       str = arr.join('');
-  //       i = 0;
-  //     }
-  //     else if (arr[arr.length - 1] === '') {
-  //       arr.pop()
-  //     }
-  //   }
-  // }
-  // else {
-  //   count = str.length;
-  // }
-  // arr = str.split(' ');
-  // count = arr.length;
-  // return count;
+  return string.split(' ').filter(function (n) { return n != '' }).length;
 }

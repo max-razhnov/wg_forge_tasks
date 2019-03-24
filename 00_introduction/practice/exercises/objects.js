@@ -11,7 +11,23 @@ Example:
 }
 */
 export function collectByFirstLetter(...words) {
-  // YOUR CODE HERE
+  let arr = [...words];
+  let obj = {};
+  for (let i = 0; i < arr.length; i++) {
+    obj[arr[i][0]] = [];
+  }
+  arr.sort();
+  let arr1 = [];
+  for (let key in obj) {
+    for (let i = 0; i < arr.length; i++) {
+      if (key === arr[i][0]) {
+        arr1.push(arr[i]);
+      }
+    }
+    obj[key] = arr1;
+    arr1 = [];
+  }
+  return obj;
 }
 
 /*
@@ -23,7 +39,16 @@ Example:
 ({name: 'John', age: 42}, 'name') yields {name: 'John'}
 */
 export function only(obj, ...keys) {
-  // YOUR CODE HERE
+  let o = {};
+  let args = [...keys];
+  for (let key in obj) {
+    for (let i = 0; i < args.length; i++) {
+      if (key === args[i]) {
+        o[key] = obj[key];
+      }
+    }
+  }
+  return o;
 }
 
 /*
@@ -44,23 +69,90 @@ Example:
 '' yields {}
 */
 export function wordsCount(text) {
-  // YOUR CODE HERE
+  let str = [...text].join('').toLowerCase().trim();
+  let arr = [];
+  let obj = {};
+  let count = 0;
+  if (str.length !== 0) {
+    for (let i = 0; i < str.length; i++) {
+      if (str[i] === '?') {
+        arr = str.split('?')
+        str = arr.join('');
+        i = 0;
+      }
+      else if (str[i] === '!') {
+        arr = str.split('!');
+        str = arr.join('');
+        i = 0;
+      }
+      else if (str[i] === '.') {
+        arr = str.split('.');
+        str = arr.join('');
+        i = 0;
+      }
+      else if (str[i] === ',') {
+        arr = str.split(',');
+        str = arr.join('');
+        i = 0;
+      }
+    }
+    arr = str.split(' ');
+    for (let i = 0; i < arr.length; i++) {
+      obj[arr[i]] = count;
+    }
+    for (let key in obj) {
+      count = 0;
+      arr.forEach((item) => {
+        if (item === key) {
+          count++;
+        }
+        obj[key] = count;
+      })
+    }
+    return obj;
+  } else {
+    return obj;
+  }
 }
 
-/*
-Write a function's body which create an object for user representation
-It should contains method for password validation:
-password is weak if it contains only lowercase letters or only uppercase
 
-Example:
-const user = createUser('root', 'topsecret')
-user.login === 'root' // true
-user.password === 'topsecret' // true
-user.isWeakPassword() === true
-user.password = 'topSecreT'
-user.isWeakPassword() === false
-*/
+// Write a function's body which create an object for user representation
+// It should contains method for password validation:
+// password is weak if it contains only lowercase letters or only uppercase
+
+// Example:
+// const user = createUser('root', 'topsecret')
+// user.login === 'root' // true
+// user.password === 'topsecret' // true
+// user.isWeakPassword() === true
+// user.password = 'topSecreT'
+// user.isWeakPassword() === false
+
 
 export function createUser(login, password) {
-  // YOUR CODE HERE
+  let obj = {
+    login: login,
+    password: password,
+    isWeakPassword: () => {
+      const reg = new RegExp('[a-z]');
+      const reg2 = new RegExp('[A-Z]')
+      let countUp = 0,
+        countDown = 0;
+      for (let key of password) {
+        if (reg.test(key)) {
+          countDown++;
+        }
+        else if (reg2.test(key)) {
+          countUp++;
+        }
+      }
+      if (countUp === password.length || countDown === password.length) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+  }
+  return obj;
 }
