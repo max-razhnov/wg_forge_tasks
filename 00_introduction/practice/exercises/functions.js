@@ -64,17 +64,12 @@ sumTwoAndFour() // 6
 Note: function has a length property which shows how many arguments it receives
 */
 export function partial(fn, ...args) {
-  let res;
   return function () {
     if (args.length == 1) {
-      // let arr = [...args, ...[...arguments]]
-      // return res = arr.reduce((a,b) => {
-      //     return a + b
-      // })
       return fn.call(this, ...args, ...arguments);
     }
     else {
-      return fn.call(this, ...args)
+      return fn.call(this, ...args);
     }
   }
 }
