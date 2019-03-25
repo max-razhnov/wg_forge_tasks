@@ -77,11 +77,14 @@ Note: function has a length property which shows how many arguments it receives
 */
 export function partial(fn, ...args) {
   return function () {
-    if (args.length == 1) {
+    if (args.length >= 1) {
       return fn.call(this, ...args, ...arguments);
     }
     else {
       return fn.call(this, ...args);
     }
+    // if (args.length >= 1) {
+    //   return [...args, ...arguments].reduce(fn)
+    // }
   }
 }
