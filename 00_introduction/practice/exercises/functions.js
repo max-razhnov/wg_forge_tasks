@@ -47,7 +47,20 @@ gen() -> 5
 ...
 */
 export function fibGenerator() {
-  // YOUR CODE HERE
+  let count = 0;
+  let arr = [0];
+  let b = 1;
+  let a = 1;
+  let f = 1;
+  arr.push(a, b)
+  return function* () {
+    f = a + b;
+    b = a
+    a = f
+    arr.push(f)
+    arr[count++]
+    yield arr
+  }
 }
 
 /*
