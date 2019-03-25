@@ -47,18 +47,14 @@ gen() -> 5
 ...
 */
 export function fibGenerator() {
-  let count = 0;
-  let arr = [];
   let b = 1;
   let a = 0;
   let f = 1;
-  arr.push(a)
-  return function* () {
+  return function () {
     f = a + b;
     b = a;
     a = f;
-    arr.push(f);
-    yield arr[count++];
+    return b;
   }
 }
 
@@ -77,14 +73,6 @@ Note: function has a length property which shows how many arguments it receives
 */
 export function partial(fn, ...args) {
   return function () {
-    if (args.length >= 1) {
-      return fn.call(this, ...args, ...arguments);
-    }
-    else {
-      return fn.call(this, ...args);
-    }
-    // if (args.length >= 1) {
-    //   return [...args, ...arguments].reduce(fn)
-    // }
+    return fn.call(this, ...args, ...arguments);
   }
 }
