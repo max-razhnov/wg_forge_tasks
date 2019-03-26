@@ -20,7 +20,11 @@ export default class HashTable {
    */
 
   hashKey(key) {
-    // your code is here
+    for (let i = 0; i < this.memory.length; i++) {
+      if (this.memory[i][0] === key) {
+        return this.memory[i][1];
+      }
+    }
   }
 
   /**
@@ -28,7 +32,11 @@ export default class HashTable {
    */
 
   get(key) {
-    // your code here
+    for (let i = 0; i < this.memory.length; i++) {
+      if (this.memory[i][0] === key) {
+        return this.memory[i][1];
+      }
+    }
   }
 
   /**
@@ -36,7 +44,7 @@ export default class HashTable {
    */
 
   set(key, value) {
-    // your code is here
+    this.memory.push([key, value]);
   }
 
   /**
@@ -45,6 +53,17 @@ export default class HashTable {
    */
 
   remove(key) {
-    // your code is here
+    let newMem = []
+    for (let i = 0; i < this.memory.length; i++) {
+      if (this.memory[i][0] === key) {
+        delete this.memory[i];
+      }
+    }
+    for (let i = 0; i < this.memory.length; i++) {
+      if (this.memory[i] !== undefined) {
+        newMem[i] = this.memory[i];
+      }
+    }
+    this.memory = [...newMem];
   }
 }
