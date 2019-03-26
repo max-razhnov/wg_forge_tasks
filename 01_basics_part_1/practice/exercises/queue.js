@@ -21,7 +21,8 @@ export default class Queue {
    */
 
   enqueue(value) {
-    // your code is here
+    this.list[this.length] = value;
+    this.length++;
   }
 
   /**
@@ -30,7 +31,20 @@ export default class Queue {
    */
 
   dequeue() {
-    // your code is here
+    if (this.length === 0) {
+      return undefined;
+    }
+    else {
+      let res = this.list[this.length - this.length];
+      let arr = [];
+      for (let i = this.length - 1; i > this.length - this.length; i--) {
+        arr[i - 1] = this.list[i];
+      }
+      this.length--;
+      delete this.list[this.length - this.length];
+      this.list = [...arr];
+      return res;
+    }
   }
 
   /**
@@ -39,6 +53,11 @@ export default class Queue {
    */
 
   peek() {
-    // your code is here
+    if (this.length === 0) {
+      return undefined;
+    }
+    else {
+      return this.list[++this.length - this.length];
+    }
   }
 }
