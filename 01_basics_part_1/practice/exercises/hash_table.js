@@ -20,7 +20,8 @@ export default class HashTable {
    */
 
   hashKey(key) {
-    return key.split("").reduce((a, b) => { a = ((a << 5) - a) + b.charCodeAt(0); return a & a }, 0);
+    return key.split('').reduce((a, b) => { a = a + b.charCodeAt(0); return a }, 0); // This is variant without bit-shift
+    // return key.split("").reduce((a, b) => { a = ((a << 5) - a) + b.charCodeAt(0); return a & a }, 0);
   }
 
   /**
