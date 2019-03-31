@@ -46,7 +46,7 @@ function squeeze(array) {
     while (flagStatus) {
       flagStatus = false;
       for (let i = 0; i < lengthArray; i++) {
-        if (array[i].length) {
+        if (array[i] instanceof Array) {
           flagStatus = true
           array.push(...array[i]);
         }
