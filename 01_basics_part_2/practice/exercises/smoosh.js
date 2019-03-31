@@ -16,27 +16,51 @@
  */
 
 function smoosh(arr) {
-  let counter = 0;
-  const flatten = [];
-  for (let value of arr) {
-    if (value instanceof Array) {
-      counter++;
-      flatten.push(...value);
+  try {
+    let counter = 0;
+    const flatten = [];
+    for (let value of arr) {
+      if (value instanceof Array) {
+        counter++;
+        flatten.push(...value);
+      }
+      else {
+        flatten.push(value);
+      }
+    }
+    if (counter > 0) {
+      return smoosh(flatten);
     }
     else {
-      flatten.push(value);
+      return flatten;
     }
-  }
-  if (counter >= 1) {
-    return smoosh(flatten);
-  }
-  else {
-    return flatten;
+  } catch (e) {
+    return e.message = "argument should be an array";
   }
 }
 
-function squeeze() {
-  // your code here
+function squeeze(arr) {
+  try {
+    let length = arr.length
+    let counter = 1;
+    while (counter !== 0) {
+      counter = 0;
+      for (let i = 0; i < length; i++) {
+        if (arr[i].length) {
+          counter++
+          arr.push(...arr[i]);
+        }
+        else {
+          arr.push(arr[i]);
+        }
+      }
+      arr.splice(0, length);
+      length = arr.length;
+    }
+    return arr;
+  } catch (e) {
+    return e.message = "argument should be an array";
+  }
 }
 
 export { smoosh, squeeze };
