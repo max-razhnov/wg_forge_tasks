@@ -5,6 +5,13 @@
  * выполнение и вернуть undefined.
  */
 
-export default function sleep() {
-  // your code here
+export default function sleep(timeSleep) {
+  if (timeSleep >= 0 && timeSleep <= 60 && `${timeSleep}`.length < 3) {
+    let sumCurrentAndDelay = Math.round(new Date().getTime() / 1000) + timeSleep;
+    while (new Date().getTime() / 1000 < sumCurrentAndDelay) {
+    }
+  }
+  else {
+    return undefined;
+  }
 }
