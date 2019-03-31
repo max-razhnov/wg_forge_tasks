@@ -17,11 +17,11 @@
 
 function smoosh(array) {
   try {
-    let flagStatus = false
+    let flagStatus = false;
     const flatten = [];
     for (let value of array) {
       if (value instanceof Array) {
-        flagStatus = true
+        flagStatus = true;
         flatten.push(...value);
       }
       else {
