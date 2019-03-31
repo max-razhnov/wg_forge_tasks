@@ -6,9 +6,22 @@
  */
 
 export default function sleep(timeSleep) {
-  if (timeSleep >= 0 && timeSleep <= 60 && `${timeSleep}`.length < 3) {
-    let sumCurrentAndDelay = Math.round(new Date().getTime() / 1000) + timeSleep;
-    while (new Date().getTime() / 1000 < sumCurrentAndDelay) {
+  let count = 0;
+  let str = '';
+  if (arguments.length < 2) {
+    str = `${timeSleep}`;
+  }
+  else {
+    str = `${[...arguments]}`;
+  }
+  for (let i = 0; i < str.length; i++) {
+    if (str.charAt(i) === '.' || str.charAt(i) === ',') {
+      count++;
+    }
+  }
+  if (typeof timeSleep === 'number' && timeSleep > 0 && count === 0) {
+    let sumCurrentAndDelay = (Date.now() / 1000) + timeSleep;
+    while (Date.now() / 1000 < sumCurrentAndDelay) {
     }
   }
   else {
