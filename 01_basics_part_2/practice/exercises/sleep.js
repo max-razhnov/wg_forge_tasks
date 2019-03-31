@@ -5,23 +5,23 @@
  * выполнение и вернуть undefined.
  */
 
-export default function sleep(timeSleep) {
-  let count = 0;
+export default function sleep(delay) {
+  let counter = 0;
   let str = '';
   if (arguments.length < 2) {
-    str = `${timeSleep}`;
+    str = `${delay}`;
   }
   else {
     str = `${[...arguments]}`;
   }
   for (let i = 0; i < str.length; i++) {
     if (str.charAt(i) === '.' || str.charAt(i) === ',') {
-      count++;
+      counter++;
     }
   }
-  if (typeof timeSleep === 'number' && timeSleep > 0 && count === 0) {
-    let sumCurrentAndDelay = (Date.now() / 1000) + timeSleep;
-    while (Date.now() / 1000 < sumCurrentAndDelay) {
+  if (typeof delay === 'number' && delay > 0 && counter === 0) {
+    let sumOfCurrentTimeAndDelay = Date.now() / 1000 + delay;
+    while (Date.now() / 1000 < sumOfCurrentTimeAndDelay) {
     }
   }
   else {

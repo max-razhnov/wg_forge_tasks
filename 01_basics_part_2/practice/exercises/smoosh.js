@@ -15,51 +15,51 @@
  * с сообщением 'argument should be an array'.
  */
 
-function smoosh(arr) {
+function smoosh(array) {
   try {
-    let counter = 0;
+    let flagStatus = false
     const flatten = [];
-    for (let value of arr) {
+    for (let value of array) {
       if (value instanceof Array) {
-        counter++;
+        flagStatus = true
         flatten.push(...value);
       }
       else {
         flatten.push(value);
       }
     }
-    if (counter > 0) {
+    if (flagStatus) {
       return smoosh(flatten);
     }
     else {
       return flatten;
     }
-  } catch (e) {
-    return e.message = "argument should be an array";
+  } catch (error) {
+    return error.message = "argument should be an array";
   }
 }
 
-function squeeze(arr) {
+function squeeze(array) {
   try {
-    let length = arr.length
-    let counter = 1;
-    while (counter !== 0) {
-      counter = 0;
-      for (let i = 0; i < length; i++) {
-        if (arr[i].length) {
-          counter++
-          arr.push(...arr[i]);
+    let lengthArray = array.length;
+    let flagStatus = true;
+    while (flagStatus) {
+      flagStatus = false;
+      for (let i = 0; i < lengthArray; i++) {
+        if (array[i].length) {
+          flagStatus = true
+          array.push(...array[i]);
         }
         else {
-          arr.push(arr[i]);
+          array.push(array[i]);
         }
       }
-      arr.splice(0, length);
-      length = arr.length;
+      array.splice(0, lengthArray);
+      lengthArray = array.length;
     }
-    return arr;
-  } catch (e) {
-    return e.message = "argument should be an array";
+    return array;
+  } catch (error) {
+    return error.message = "argument should be an array";
   }
 }
 
