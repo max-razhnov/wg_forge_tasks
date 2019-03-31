@@ -15,8 +15,24 @@
  * с сообщением 'argument should be an array'.
  */
 
-function smoosh() {
-  // your code here
+function smoosh(arr) {
+  let counter = 0;
+  const flatten = [];
+  for (let value of arr) {
+    if (value instanceof Array) {
+      counter++;
+      flatten.push(...value);
+    }
+    else {
+      flatten.push(value);
+    }
+  }
+  if (counter >= 1) {
+    return smoosh(flatten);
+  }
+  else {
+    return flatten;
+  }
 }
 
 function squeeze() {
