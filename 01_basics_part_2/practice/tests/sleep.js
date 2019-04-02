@@ -33,6 +33,6 @@ test('argument should be one', t => {
   const start = Date.now();
   sleep(1,2);
   const spent = Date.now() - start;
-  t.true(spent <= 1, 'return undefined immediately');
+  t.true(spent < 1000, 'return undefined immediately');
   t.end();
 });
