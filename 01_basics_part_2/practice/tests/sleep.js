@@ -27,7 +27,7 @@ test('sleep bad argument', t => {
 
   t.end();
 });
-
+//провекра нескольких аргументов
 test('argument should be one', t => {
   const start = Date.now();
   sleep(1,2);
