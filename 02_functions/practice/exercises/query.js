@@ -81,7 +81,7 @@
  * 3. Реализовать функциональность создания INSERT и DELETE запросов. Написать для них тесты.
  */
 
-export default function query(tableName) {
+export default function query(tableName, options) {
   const space = ' ';
   const SELECT_DEFAULT = 'SELECT';
   const FROM_DEFAULT = 'FROM';
