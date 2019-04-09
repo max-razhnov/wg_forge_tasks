@@ -103,58 +103,83 @@ export default function query(tableName) {
 
   let methodsForCondition = {
     equals: (value) => {
-      let val = null;
+      let q = '';
       if (typeof value === 'number') {
-        val = value;
+        whereQuery += space + '=' + space + q + value + q;
+      }
+      else if (typeof value === 'object') {
+        subqueryFlagStatus = true;
+        let str = value.toString().split(';')
+        whereQuery += space + '=' + space + `(${str.join('')})`;
       }
       else {
-        val = `'${value}'`;
+        q = '\'';
+        whereQuery += space + '=' + space + q + value + q;
       }
-      whereQuery += space + '=' + space + val;
       return obj;
     },
     gt: (value) => {
-      let val = null;
+      let q = '';
       if (typeof value === 'number') {
-        val = value;
+        whereQuery += space + '>' + space + q + value + q;
+      }
+      else if (typeof value === 'object') {
+        subqueryFlagStatus = true;
+        let str = value.toString().split(';')
+        whereQuery += space + '>' + space + `(${str.join('')})`;
       }
       else {
-        val = `'${value}'`;
+        q = '\'';
+        whereQuery += space + '>' + space + q + value + q;
       }
-      whereQuery += space + '>' + space + val;
       return obj;
     },
     gte: (value) => {
-      let val = null;
+      let q = '';
       if (typeof value === 'number') {
-        val = value;
+        whereQuery += space + '>=' + space + q + value + q;
+      }
+      else if (typeof value === 'object') {
+        subqueryFlagStatus = true;
+        let str = value.toString().split(';')
+        whereQuery += space + '>=' + space + `(${str.join('')})`;
       }
       else {
-        val = `'${value}'`;
+        q = '\'';
+        whereQuery += space + '>=' + space + q + value + q;
       }
-      whereQuery += space + '>=' + space + val;
       return obj;
     },
     lt: (value) => {
-      let val = null;
+      let q = '';
       if (typeof value === 'number') {
-        val = value;
+        whereQuery += space + '<' + space + q + value + q;
+      }
+      else if (typeof value === 'object') {
+        subqueryFlagStatus = true;
+        let str = value.toString().split(';')
+        whereQuery += space + '<' + space + `(${str.join('')})`;
       }
       else {
-        val = `'${value}'`;
+        q = '\'';
+        whereQuery += space + '<' + space + q + value + q;
       }
-      whereQuery += space + '<' + space + val;
       return obj;
     },
     lte: (value) => {
-      let val = null;
+      let q = '';
       if (typeof value === 'number') {
-        val = value;
+        whereQuery += space + '<=' + space + q + value + q;
+      }
+      else if (typeof value === 'object') {
+        subqueryFlagStatus = true;
+        let str = value.toString().split(';')
+        whereQuery += space + '<=' + space + `(${str.join('')})`;
       }
       else {
-        val = `'${value}'`;
+        q = '\'';
+        whereQuery += space + '<=' + space + q + value + q;
       }
-      whereQuery += space + '<=' + space + val;
       return obj;
     },
     between: (from, to) => {
@@ -217,6 +242,11 @@ export default function query(tableName) {
           whereQuery = str.join(space);
         }
         whereQuery += space + 'IN' + space + `(${arrStr})`
+      }
+      else if (typeof values === 'object') {
+        subqueryFlagStatus = true;
+        let str = values.toString().split(';')
+        whereQuery += space + 'IN' + space + `(${str.join('')})`;
       }
       else {
         return new Error('error: values should be an array');
@@ -287,7 +317,6 @@ export default function query(tableName) {
       }
       else {
         return obj;
-        // return new Error('two from methods');
       }
       fromFlagStatus = true;
       return obj;
