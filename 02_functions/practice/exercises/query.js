@@ -81,6 +81,282 @@
  * 3. Реализовать функциональность создания INSERT и DELETE запросов. Написать для них тесты.
  */
 
-export default function query() {
-  // ¯\_(ツ)_/¯
+export default function query(tableName) {
+  const space = ' ';
+  const SELECT_DEFAULT = 'SELECT';
+  const FROM_DEFAULT = 'FROM';
+  const WHERE_DEFAULT = 'WHERE';
+  let quotes = '';
+  let resultToString = '';
+  let selectQuery = `${SELECT_DEFAULT}${space}`;
+  let fromQuery = ` ${FROM_DEFAULT}${space}`;
+  let whereQuery = `${space}${WHERE_DEFAULT}${space}`;
+  let selectFlagStatus = false;
+  let fromFlagStatus = false;
+  let whereFlagStatus = false;
+  let orwhereFlagStatus = false;
+  let notFlagStatus = false;
+
+  let methodsForCondition = {
+    equals: (value) => {
+      let val = null;
+      if (typeof value === 'number') {
+        val = value;
+      }
+      else {
+        val = `'${value}'`;
+      }
+      whereQuery += space + '=' + space + val;
+      return obj;
+    },
+    gt: (value) => {
+      let val = null;
+      if (typeof value === 'number') {
+        val = value;
+      }
+      else {
+        val = `'${value}'`;
+      }
+      whereQuery += space + '>' + space + val;
+      return obj;
+    },
+    gte: (value) => {
+      let val = null;
+      if (typeof value === 'number') {
+        val = value;
+      }
+      else {
+        val = `'${value}'`;
+      }
+      whereQuery += space + '>=' + space + val;
+      return obj;
+    },
+    lt: (value) => {
+      let val = null;
+      if (typeof value === 'number') {
+        val = value;
+      }
+      else {
+        val = `'${value}'`;
+      }
+      whereQuery += space + '<' + space + val;
+      return obj;
+    },
+    lte: (value) => {
+      let val = null;
+      if (typeof value === 'number') {
+        val = value;
+      }
+      else {
+        val = `'${value}'`;
+      }
+      whereQuery += space + '<=' + space + val;
+      return obj;
+    },
+    between: (from, to) => {
+      let q_from = '';
+      let q_to = '';
+      if (typeof from === 'string') {
+        q_from = '\'';
+      }
+      if (typeof to === 'string') {
+        q_to = '\'';
+      }
+      if (notFlagStatus) {
+        let str = whereQuery.split(space);
+        let temp = str[str.length - 2];
+        str[str.length - 2] = str[str.length - 1]
+        str[str.length - 1] = temp;
+        whereQuery = str.join(space)
+      }
+      whereQuery += space + 'BETWEEN' + space + q_from + from + q_from + space + 'AND' + space + q_to + to + q_to;
+      return obj;
+    },
+    isNull: () => {
+      if (notFlagStatus) {
+        let str = whereQuery.split(space);
+        let temp = str[str.length - 2];
+        str[str.length - 2] = str[str.length - 1]
+        str[str.length - 1] = 'IS';
+        str.push(temp);
+        whereQuery = str.join(space);
+        whereQuery += space + 'NULL';
+      }
+      else {
+        whereQuery += space + 'IS NULL';
+      }
+      return obj;
+    },
+    in: (values) => {
+      if (values instanceof Array && values.length !== 0) {
+        let arrStr = '';
+        let q = '';
+        for (let i = 0; i < values.length; i++) {
+          if (typeof values[i] === 'string') {
+            q = '\'';
+          }
+          else {
+            q = '';
+          }
+          if (i !== values.length - 1) {
+            arrStr += q + values[i] + q + `,${space}`;
+          }
+          else {
+            arrStr += q + values[i] + q;
+          }
+        }
+        if (notFlagStatus) {
+          let str = whereQuery.split(space);
+          let temp = str[str.length - 2];
+          str[str.length - 2] = str[str.length - 1];
+          str[str.length - 1] = temp;
+          whereQuery = str.join(space);
+        }
+        whereQuery += space + 'IN' + space + `(${arrStr})`
+      }
+      else {
+        return new Error('error: values should be an array');
+      }
+      return obj;
+    },
+    not: () => {
+      if (!notFlagStatus) {
+        let arr = whereQuery.split(`${space}`);
+        let lastEl = arr.pop();
+        arr.push('NOT');
+        arr.push(lastEl);
+        whereQuery = arr.join(`${space}`);
+        notFlagStatus = true;
+        return methodsForCondition;
+      }
+      else {
+        throw 'error: could not place \'not\' after \'not\'';
+      }
+    }
+  }
+
+  let obj = {
+    select: (...args) => {
+      let arr = [...args];
+      if (!selectFlagStatus) {
+        if (arr.length !== 0) {
+          for (let i = 0; i < arr.length; i++) {
+            if (typeof arr[i] === 'string') {
+              if (i !== arr.length - 1) {
+                selectQuery += quotes + arr[i] + quotes + ', ';
+              }
+              else {
+                selectQuery += quotes + arr[i] + quotes;
+              }
+            }
+            else {
+              return new Error('arg not string');
+            }
+          }
+          selectFlagStatus = true;
+          return obj;
+        }
+        else {
+          selectQuery += '*';
+          selectFlagStatus = true;
+          return obj;
+        }
+      }
+      else {
+        return new Error('two select methods');
+      }
+    },
+
+    from: (tableNamePar) => {
+      let fromTableName = null;
+      if (typeof tableName === 'string' && tableName.length !== 0) {
+        fromTableName = tableName;
+      }
+      else if (typeof tableNamePar === 'string' && tableNamePar.length !== 0) {
+        fromTableName = tableNamePar;
+      }
+      else {
+        return new Error('not string parameter or empty string');
+      }
+      if (!fromFlagStatus) {
+        fromQuery += quotes + fromTableName + quotes;
+      }
+      else {
+        return obj;
+        // return new Error('two from methods');
+      }
+      fromFlagStatus = true;
+      return obj;
+    },
+
+    where: (fieldName) => {
+      if (selectFlagStatus && fromFlagStatus) {
+        if (typeof fieldName === 'string' && fieldName.length !== 0) {
+          if (!whereFlagStatus && !orwhereFlagStatus) {
+            whereQuery += fieldName;
+          }
+          else if ((whereFlagStatus && !orwhereFlagStatus) || (!whereFlagStatus && orwhereFlagStatus)) {
+            whereQuery += space + 'AND' + space + fieldName;
+          }
+          else if (whereFlagStatus && orwhereFlagStatus) {
+            whereQuery += space + 'AND' + space + fieldName;
+          }
+          notFlagStatus = false;
+          whereFlagStatus = true;
+        }
+        else {
+          return new Error('not string or empty fieldName ')
+        }
+      }
+      return methodsForCondition;
+    },
+
+    orWhere: (fieldName) => {
+      if (selectFlagStatus && fromFlagStatus) {
+        if (typeof fieldName === 'string' && fieldName.length !== 0) {
+          if (!whereFlagStatus && !orwhereFlagStatus) {
+            whereQuery += fieldName;
+          }
+          else if (orwhereFlagStatus || whereFlagStatus) {
+            whereQuery += space + 'OR' + space + fieldName;
+          }
+          notFlagStatus = false;
+          orwhereFlagStatus = true;
+        }
+        else {
+          return new Error('not string or empty fieldName');
+        }
+      }
+      return methodsForCondition;
+    },
+
+    toString: () => {
+      if (selectFlagStatus) {
+        resultToString = selectQuery;
+      }
+      if (!fromFlagStatus && typeof tableName === 'string' && tableName.length !== 0) {
+        resultToString += fromQuery + quotes + tableName + quotes;
+      }
+      else if (fromFlagStatus) {
+        resultToString += fromQuery;
+      }
+      else {
+        return new Error('empty tableName');
+      }
+      if (whereFlagStatus || orwhereFlagStatus) {
+        resultToString += whereQuery;
+      }
+      return `${resultToString};`;
+    }
+  };
+
+  selectFlagStatus = false;
+  fromFlagStatus = false;
+  whereFlagStatus = false;
+  orwhereFlagStatus = false;
+  notFlagStatus = false;
+  selectQuery = `${SELECT_DEFAULT}${space}`;
+  fromQuery = ` ${FROM_DEFAULT}${space}`;
+  whereQuery = `${space}${WHERE_DEFAULT}${space}`;
+  return obj;
 }
