@@ -97,6 +97,10 @@ export default function query(tableName) {
   let orwhereFlagStatus = false;
   let notFlagStatus = false;
 
+  if ((typeof options === 'object' && options.escapeNames) || (typeof tableName === 'object' && tableName.escapeNames)) {
+    quotes = '\'';
+  }
+
   let methodsForCondition = {
     equals: (value) => {
       let val = null;
@@ -257,7 +261,7 @@ export default function query(tableName) {
           return obj;
         }
         else {
-          selectQuery += '*';
+          selectQuery += quotes + '*' + quotes;
           selectFlagStatus = true;
           return obj;
         }
