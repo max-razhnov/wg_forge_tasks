@@ -2,7 +2,7 @@ import test from 'tape-catch';
 
 import query from '../exercises/query';
 
-const QUERY_METHODS = ['select', 'from', 'where', 'orWhere', 'toString'];
+const QUERY_METHODS = ['select', 'from', 'where', 'orWhere', 'insert', 'values', 'delete', 'toString'];
 const WHERE_METHODS = ['equals', 'in', 'gt', 'gte', 'lt', 'lte', 'between', 'isNull', 'not'];
 
 test('query', t => {
@@ -107,6 +107,21 @@ test('query', t => {
       `SELECT * FROM user WHERE id NOT IN (1, '3', 5, '7');`
     );
 
+    qt.end();
+  });
+
+  t.test('additional generated sql', qt => {
+    qt.equal(query().insert('users').toString(), 'INSERT INTO users;');
+    qt.equal(query().insert('id', [1, 2, '3']).toString(), `INSERT INTO id (1, 2, '3');`);
+    qt.equal(query().insert('id').values([1, 2, 'max']).toString(), `INSERT INTO id VALUES (1, 2, 'max');`);
+    qt.equal(query().delete('users').where('obj').not().equals(50).toString(), 'DELETE FROM users WHERE NOT obj = 50;');
+    qt.equal(query().delete('posts').where('id').gt(10).toString(), 'DELETE FROM posts WHERE id > 10;');
+    qt.throws(() => {
+      query().delete();
+    }, 'delete can\'t have empty fieldName');
+    qt.throws(() => {
+      query().values();
+    }, `values can't be called before delete`);
     qt.end();
   });
 
