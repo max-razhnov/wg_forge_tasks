@@ -82,314 +82,425 @@
  */
 
 export default function query(tableName, options) {
-  const space = ' ';
-  const SELECT_DEFAULT = 'SELECT';
-  const FROM_DEFAULT = 'FROM';
-  const WHERE_DEFAULT = 'WHERE';
-  let quotes = '';
-  let resultToString = '';
-  let selectQuery = `${SELECT_DEFAULT}${space}`;
-  let fromQuery = ` ${FROM_DEFAULT}${space}`;
-  let whereQuery = `${space}${WHERE_DEFAULT}${space}`;
   let selectFlagStatus = false;
+  let tableNameFlagStatus = false;
   let fromFlagStatus = false;
   let whereFlagStatus = false;
-  let orwhereFlagStatus = false;
+  let orWhereFlagStatus = false;
   let notFlagStatus = false;
-
-  if ((typeof options === 'object' && options.escapeNames) || (typeof tableName === 'object' && tableName.escapeNames)) {
-    quotes = '\'';
-  }
-
+  let insertFlagStatus = false;
+  let valuesFlagStatus = false
+  let deleteFlagStatus = false;
+  let quotes = '';
+  let fromPar = [];
+  let selectPar = [];
+  let wherePar = [];
+  let insertPar = [];
+  let deletePar = [];
   let methodsForCondition = {
     equals: (value) => {
-      let q = '';
+      let quotesValue;
       if (typeof value === 'number') {
-        whereQuery += space + '=' + space + q + value + q;
+        quotesValue = '';
+        wherePar.push(`=`);
+        wherePar.push(`${quotesValue}${value}${quotesValue}`);
       }
       else if (typeof value === 'object') {
-        subqueryFlagStatus = true;
-        let str = value.toString().split(';')
-        whereQuery += space + '=' + space + `(${str.join('')})`;
+        wherePar.push('=');
+        wherePar.push(`(${value.toString().split(';')[0]})`);
       }
       else {
-        q = '\'';
-        whereQuery += space + '=' + space + q + value + q;
+        quotesValue = '\'';
+        wherePar.push(`=`);
+        wherePar.push(`${quotesValue}${value}${quotesValue}`);
       }
       return obj;
     },
     gt: (value) => {
-      let q = '';
+      let quotesValue;
       if (typeof value === 'number') {
-        whereQuery += space + '>' + space + q + value + q;
+        quotesValue = '';
+        wherePar.push(`>`);
+        wherePar.push(`${quotesValue}${value}${quotesValue}`);
       }
       else if (typeof value === 'object') {
-        subqueryFlagStatus = true;
-        let str = value.toString().split(';')
-        whereQuery += space + '>' + space + `(${str.join('')})`;
+        wherePar.push('>');
+        wherePar.push(`(${value.toString().split(';')[0]})`);
       }
       else {
-        q = '\'';
-        whereQuery += space + '>' + space + q + value + q;
+        quotesValue = '\'';
+        wherePar.push(`>`);
+        wherePar.push(`${quotesValue}${value}${quotesValue}`);
       }
       return obj;
     },
     gte: (value) => {
-      let q = '';
+      let quotesValue;
       if (typeof value === 'number') {
-        whereQuery += space + '>=' + space + q + value + q;
+        quotesValue = '';
+        wherePar.push(`>=`);
+        wherePar.push(`${quotesValue}${value}${quotesValue}`);
       }
       else if (typeof value === 'object') {
-        subqueryFlagStatus = true;
-        let str = value.toString().split(';')
-        whereQuery += space + '>=' + space + `(${str.join('')})`;
+        wherePar.push('>=');
+        wherePar.push(`(${value.toString().split(';')[0]})`);
       }
       else {
-        q = '\'';
-        whereQuery += space + '>=' + space + q + value + q;
+        quotesValue = '\'';
+        wherePar.push(`>=`);
+        wherePar.push(`${quotesValue}${value}${quotesValue}`);
       }
       return obj;
     },
     lt: (value) => {
-      let q = '';
+      let quotesValue;
       if (typeof value === 'number') {
-        whereQuery += space + '<' + space + q + value + q;
+        quotesValue = '';
+        wherePar.push(`<`);
+        wherePar.push(`${quotesValue}${value}${quotesValue}`);
       }
       else if (typeof value === 'object') {
-        subqueryFlagStatus = true;
-        let str = value.toString().split(';')
-        whereQuery += space + '<' + space + `(${str.join('')})`;
+        wherePar.push('<');
+        wherePar.push(`(${value.toString().split(';')[0]})`);
       }
       else {
-        q = '\'';
-        whereQuery += space + '<' + space + q + value + q;
+        quotesValue = '\'';
+        wherePar.push(`<`);
+        wherePar.push(`${quotesValue}${value}${quotesValue}`);
       }
       return obj;
     },
     lte: (value) => {
-      let q = '';
+      let quotesValue;
       if (typeof value === 'number') {
-        whereQuery += space + '<=' + space + q + value + q;
+        quotesValue = '';
+        wherePar.push(`<=`);
+        wherePar.push(`${quotesValue}${value}${quotesValue}`);
       }
       else if (typeof value === 'object') {
-        subqueryFlagStatus = true;
-        let str = value.toString().split(';')
-        whereQuery += space + '<=' + space + `(${str.join('')})`;
+        wherePar.push('<=');
+        wherePar.push(`(${value.toString().split(';')[0]})`);
       }
       else {
-        q = '\'';
-        whereQuery += space + '<=' + space + q + value + q;
+        quotesValue = '\'';
+        wherePar.push(`<=`);
+        wherePar.push(`${quotesValue}${value}${quotesValue}`);
       }
+
       return obj;
     },
     between: (from, to) => {
-      let q_from = '';
-      let q_to = '';
+      let quotesFrom = '';
+      let quotesTo = '';
       if (typeof from === 'string') {
-        q_from = '\'';
+        quotesFrom = '\'';
       }
       if (typeof to === 'string') {
-        q_to = '\'';
+        quotesTo = '\'';
       }
       if (notFlagStatus) {
-        let str = whereQuery.split(space);
-        let temp = str[str.length - 2];
-        str[str.length - 2] = str[str.length - 1]
-        str[str.length - 1] = temp;
-        whereQuery = str.join(space)
+        let conditionValue = wherePar.pop();
+        let notValueFromArray = wherePar.pop();
+        wherePar.push(conditionValue);
+        wherePar.push(notValueFromArray);
       }
-      whereQuery += space + 'BETWEEN' + space + q_from + from + q_from + space + 'AND' + space + q_to + to + q_to;
+      let arr = ['BETWEEN', `${quotesFrom}${from}${quotesFrom}`, 'AND', `${quotesTo}${to}${quotesTo}`];
+      wherePar.push(...arr);
       return obj;
     },
     isNull: () => {
       if (notFlagStatus) {
-        let str = whereQuery.split(space);
-        let temp = str[str.length - 2];
-        str[str.length - 2] = str[str.length - 1]
-        str[str.length - 1] = 'IS';
-        str.push(temp);
-        whereQuery = str.join(space);
-        whereQuery += space + 'NULL';
+        let conditionValue = wherePar.pop();
+        let notValueFromArray = wherePar.pop();
+        let arr = [conditionValue, 'IS', notValueFromArray, 'NULL'];
+        wherePar.push(...arr);
       }
       else {
-        whereQuery += space + 'IS NULL';
+        wherePar.push('IS NULL');
       }
       return obj;
     },
     in: (values) => {
       if (values instanceof Array && values.length !== 0) {
-        let arrStr = '';
-        let q = '';
+        let arr = [];
+        let quotesValue;
         for (let i = 0; i < values.length; i++) {
           if (typeof values[i] === 'string') {
-            q = '\'';
+            quotesValue = '\'';
           }
           else {
-            q = '';
+            quotesValue = '';
           }
           if (i !== values.length - 1) {
-            arrStr += q + values[i] + q + `,${space}`;
+            arr.push(`${quotesValue}${values[i]}${quotesValue},`);
           }
           else {
-            arrStr += q + values[i] + q;
+            arr.push(`${quotesValue}${values[i]}${quotesValue}`);
           }
         }
         if (notFlagStatus) {
-          let str = whereQuery.split(space);
-          let temp = str[str.length - 2];
-          str[str.length - 2] = str[str.length - 1];
-          str[str.length - 1] = temp;
-          whereQuery = str.join(space);
+          let conditionValue = wherePar.pop();
+          let notValueFromArray = wherePar.pop();
+          wherePar.push(conditionValue);
+          wherePar.push(notValueFromArray);
         }
-        whereQuery += space + 'IN' + space + `(${arrStr})`
+        wherePar.push('IN');
+        wherePar.push(`(${arr.join(' ')})`);
       }
       else if (typeof values === 'object') {
-        subqueryFlagStatus = true;
-        let str = values.toString().split(';')
-        whereQuery += space + 'IN' + space + `(${str.join('')})`;
+        wherePar.push('IN');
+        wherePar.push(`(${values.toString().split(';')[0]})`);
       }
       else {
-        return new Error('error: values should be an array');
+        throw new Error('error: values should be an array');
       }
       return obj;
     },
     not: () => {
       if (!notFlagStatus) {
-        let arr = whereQuery.split(`${space}`);
-        let lastEl = arr.pop();
-        arr.push('NOT');
-        arr.push(lastEl);
-        whereQuery = arr.join(`${space}`);
         notFlagStatus = true;
+        let lastValue = wherePar.pop();
+        wherePar.push('NOT');
+        wherePar.push(lastValue);
         return methodsForCondition;
       }
       else {
-        throw 'error: could not place \'not\' after \'not\'';
+        throw new Error('error: could not place \'not\' after \'not\'');
       }
     }
   }
 
   let obj = {
     select: (...args) => {
+      if (typeof tableName === 'string' && tableName.length !== 0) {
+        tableNameFlagStatus = true;
+      }
+      if ((typeof options === 'object' && options.escapeNames) || (typeof tableName === 'object' && tableName.escapeNames)) {
+        quotes = '\"';
+      }
       let arr = [...args];
       if (!selectFlagStatus) {
+        selectPar.push('SELECT');
         if (arr.length !== 0) {
           for (let i = 0; i < arr.length; i++) {
             if (typeof arr[i] === 'string') {
               if (i !== arr.length - 1) {
-                selectQuery += quotes + arr[i] + quotes + ', ';
+                selectPar.push(`${quotes}${arr[i]}${quotes},`);
               }
               else {
-                selectQuery += quotes + arr[i] + quotes;
+                selectPar.push(`${quotes}${arr[i]}${quotes}`);
               }
             }
-            else {
-              return new Error('arg not string');
-            }
           }
-          selectFlagStatus = true;
-          return obj;
         }
         else {
-          selectQuery += quotes + '*' + quotes;
-          selectFlagStatus = true;
-          return obj;
+          selectPar.push(`${quotes}*${quotes}`);
         }
+        selectFlagStatus = true;
+        return obj;
       }
       else {
-        return new Error('two select methods');
+        throw new Error('two select methods!');
       }
     },
-
-    from: (tableNamePar) => {
-      let fromTableName = null;
-      if (typeof tableName === 'string' && tableName.length !== 0) {
-        fromTableName = tableName;
-      }
-      else if (typeof tableNamePar === 'string' && tableNamePar.length !== 0) {
-        fromTableName = tableNamePar;
-      }
-      else {
-        return new Error('not string parameter or empty string');
-      }
+    from: (fieldName) => {
       if (!fromFlagStatus) {
-        fromQuery += quotes + fromTableName + quotes;
+        if (tableNameFlagStatus) {
+          fromPar.push(`FROM`);
+          fromPar.push(`${quotes}${tableName}${quotes}`);
+        }
+        else if (typeof fieldName === 'string' && fieldName.length !== 0) {
+          fromPar.push(`FROM`);
+          fromPar.push(`${quotes}${fieldName}${quotes}`);
+        }
+        else {
+          throw new Error('not string parameter or empty string!');
+        }
+        fromFlagStatus = true;
+        return obj;
       }
       else {
         return obj;
       }
-      fromFlagStatus = true;
-      return obj;
     },
-
     where: (fieldName) => {
-      if (selectFlagStatus && fromFlagStatus) {
-        if (typeof fieldName === 'string' && fieldName.length !== 0) {
-          if (!whereFlagStatus && !orwhereFlagStatus) {
-            whereQuery += fieldName;
+      if (typeof fieldName === 'string' && fieldName.length !== 0) {
+        if (deleteFlagStatus) {
+          wherePar = [];
+          wherePar.push(`WHERE`);
+          wherePar.push(fieldName);
+        }
+        else if (selectFlagStatus) {
+          if (!whereFlagStatus && !orWhereFlagStatus) {
+            wherePar.push(`WHERE`);
+            wherePar.push(fieldName);
           }
-          else if ((whereFlagStatus && !orwhereFlagStatus) || (!whereFlagStatus && orwhereFlagStatus)) {
-            whereQuery += space + 'AND' + space + fieldName;
+          else if ((whereFlagStatus && !orWhereFlagStatus) || (!whereFlagStatus && orWhereFlagStatus) || (whereFlagStatus && orWhereFlagStatus)) {
+            wherePar.push(`AND`);
+            wherePar.push(fieldName);
           }
-          else if (whereFlagStatus && orwhereFlagStatus) {
-            whereQuery += space + 'AND' + space + fieldName;
-          }
-          notFlagStatus = false;
           whereFlagStatus = true;
-        }
-        else {
-          return new Error('not string or empty fieldName ')
-        }
-      }
-      return methodsForCondition;
-    },
-
-    orWhere: (fieldName) => {
-      if (selectFlagStatus && fromFlagStatus) {
-        if (typeof fieldName === 'string' && fieldName.length !== 0) {
-          if (!whereFlagStatus && !orwhereFlagStatus) {
-            whereQuery += fieldName;
-          }
-          else if (orwhereFlagStatus || whereFlagStatus) {
-            whereQuery += space + 'OR' + space + fieldName;
-          }
           notFlagStatus = false;
-          orwhereFlagStatus = true;
+        }
+        else if (deleteFlagStatus) {
+          debugger
+          wherePar = [];
+          wherePar.push(`WHERE`);
+          wherePar.push(fieldName);
         }
         else {
-          return new Error('not string or empty fieldName');
         }
-      }
-      return methodsForCondition;
-    },
-
-    toString: () => {
-      if (selectFlagStatus) {
-        resultToString = selectQuery;
-      }
-      if (!fromFlagStatus && typeof tableName === 'string' && tableName.length !== 0) {
-        resultToString += fromQuery + quotes + tableName + quotes;
-      }
-      else if (fromFlagStatus) {
-        resultToString += fromQuery;
+        return methodsForCondition;
       }
       else {
-        return new Error('empty tableName');
+        throw new Error('not string or empty fieldName ');
       }
-      if (whereFlagStatus || orwhereFlagStatus) {
-        resultToString += whereQuery;
+    },
+    orWhere: (fieldName) => {
+      if (typeof fieldName === 'string' && fieldName.length !== 0) {
+        if (!whereFlagStatus && !orWhereFlagStatus) {
+          wherePar.push('WHERE');
+          wherePar.push(fieldName);
+        }
+        else if (orWhereFlagStatus || whereFlagStatus) {
+          wherePar.push('OR');
+          wherePar.push(fieldName);
+        }
+        notFlagStatus = false;
+        orWhereFlagStatus = true;
       }
-      return `${resultToString};`;
+      else {
+        return new Error('not string or empty fieldName');
+      }
+      return methodsForCondition;
+    },
+    insert: (tableName, fieldName) => {
+      let arr = [];
+      if (typeof tableName === 'string' && tableName.length !== 0) {
+        if (!insertFlagStatus) {
+          insertPar.push('INSERT INTO');
+          insertPar.push(tableName);
+          if (fieldName instanceof Array) {
+            let quotesValue;
+            for (let i = 0; i < fieldName.length; i++) {
+              if (typeof fieldName[i] === 'string') {
+                quotesValue = '\'';
+              }
+              else {
+                quotesValue = '';
+              }
+              if (i !== fieldName.length - 1) {
+                arr.push(`${quotesValue}${fieldName[i]}${quotesValue},`);
+              }
+              else {
+                arr.push(`${quotesValue}${fieldName[i]}${quotesValue}`);
+              }
+            }
+            insertPar.push(`(${arr.join(' ')})`);
+          }
+          insertFlagStatus = true;
+        }
+        else {
+          throw new Error('two insert methods');
+        }
+      }
+      else {
+        throw new Error('not string or empty fieldName');
+      }
+      return obj;
+    },
+    values: (fieldName) => {
+      if (fieldName instanceof Array) {
+        if (!deleteFlagStatus) {
+          if (!valuesFlagStatus) {
+            insertPar.push('VALUES');
+            let arr = [];
+            let quotesValue;
+            for (let i = 0; i < fieldName.length; i++) {
+              if (typeof fieldName[i] === 'string') {
+                quotesValue = '\'';
+              }
+              else {
+                quotesValue = '';
+              }
+              if (i !== fieldName.length - 1) {
+                arr.push(`${quotesValue}${fieldName[i]}${quotesValue},`);
+              }
+              else {
+                arr.push(`${quotesValue}${fieldName[i]}${quotesValue}`);
+              }
+            }
+            insertPar.push(`(${arr.join(' ')})`);
+            valuesFlagStatus = true;
+            return obj;
+          }
+          else {
+            throw new Error('two values methods');
+          }
+        }
+        else {
+          throw new Error(`values can't be called before delete`);
+        }
+      }
+      else {
+        throw new Error('fieldName not array type');
+      }
+    },
+    delete: (fieldName) => {
+      if (typeof fieldName === 'string' && fieldName.length !== 0) {
+        deletePar.push(`DELETE FROM ${fieldName}`);
+        deleteFlagStatus = true;
+      }
+      else {
+        throw new Error('not string or empty fieldName');
+      }
+      return obj;
+    },
+    toString: () => {
+      let arr = [];
+      let str;
+      if (selectFlagStatus) {
+        arr.push(...selectPar);
+      }
+      if (tableNameFlagStatus && !fromFlagStatus) {
+        if (fromPar.length === 0) {
+          arr.push(`FROM`);
+          arr.push(`${quotes}${tableName}${quotes}`);
+        }
+        else {
+          arr.push(...fromPar);
+        }
+      }
+      else if (fromFlagStatus) {
+        arr.push(...fromPar);
+      }
+      if (whereFlagStatus || orWhereFlagStatus) {
+        arr.push(...wherePar);
+      }
+      if (insertFlagStatus) {
+        arr = [];
+        arr.push(...insertPar);
+      }
+      if (deleteFlagStatus) {
+        arr = [];
+        arr.push(...deletePar);
+        if (deleteFlagStatus) {
+          arr.push(...wherePar);
+        }
+      }
+      str = `${arr.join(' ')};`;
+      return str;
     }
-  };
-
-  selectFlagStatus = false;
+  }
   fromFlagStatus = false;
   whereFlagStatus = false;
-  orwhereFlagStatus = false;
+  orWhereFlagStatus = false
   notFlagStatus = false;
-  selectQuery = `${SELECT_DEFAULT}${space}`;
-  fromQuery = ` ${FROM_DEFAULT}${space}`;
-  whereQuery = `${space}${WHERE_DEFAULT}${space}`;
+  selectFlagStatus = false;
+  tableNameFlagStatus = false;
+  notFlagStatus = false;
+  insertFlagStatus = false;
+  valuesFlagStatus = false;
+  deleteFlagStatus = false;
   return obj;
 }
