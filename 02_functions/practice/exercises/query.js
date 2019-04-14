@@ -82,16 +82,21 @@
  */
 
 export default function query(tableName, options) {
-  let selectFlag = false;
-  let tableNameFlag = false;
-  let fromFlag = false;
-  let whereFlag = false;
-  let orWhereFlag = false;
+  let selectFlagStatus = false;
+  let tableNameFlagStatus = false;
+  let fromFlagStatus = false;
+  let whereFlagStatus = false;
+  let orWhereFlagStatus = false;
   let notFlagStatus = false;
+  let insertFlagStatus = false;
+  let valuesFlagStatus = false
+  let deleteFlagStatus = false;
   let quotes = '';
   let fromPar = [];
   let selectPar = [];
   let wherePar = [];
+  let insertPar = [];
+  let deletePar = [];
   let methodsForCondition = {
     equals: (value) => {
       let quotesValue;
@@ -268,13 +273,13 @@ export default function query(tableName, options) {
   let obj = {
     select: (...args) => {
       if (typeof tableName === 'string' && tableName.length !== 0) {
-        tableNameFlag = true;
+        tableNameFlagStatus = true;
       }
       if ((typeof options === 'object' && options.escapeNames) || (typeof tableName === 'object' && tableName.escapeNames)) {
         quotes = '\"';
       }
       let arr = [...args];
-      if (!selectFlag) {
+      if (!selectFlagStatus) {
         selectPar.push('SELECT');
         if (arr.length !== 0) {
           for (let i = 0; i < arr.length; i++) {
@@ -291,7 +296,7 @@ export default function query(tableName, options) {
         else {
           selectPar.push(`${quotes}*${quotes}`);
         }
-        selectFlag = true;
+        selectFlagStatus = true;
         return obj;
       }
       else {
@@ -299,8 +304,8 @@ export default function query(tableName, options) {
       }
     },
     from: (fieldName) => {
-      if (!fromFlag) {
-        if (tableNameFlag) {
+      if (!fromFlagStatus) {
+        if (tableNameFlagStatus) {
           fromPar.push(`FROM`);
           fromPar.push(`${quotes}${tableName}${quotes}`);
         }
@@ -311,7 +316,7 @@ export default function query(tableName, options) {
         else {
           throw new Error('not string parameter or empty string!');
         }
-        fromFlag = true;
+        fromFlagStatus = true;
         return obj;
       }
       else {
@@ -319,77 +324,183 @@ export default function query(tableName, options) {
       }
     },
     where: (fieldName) => {
-      if (selectFlag) {
-        if (typeof fieldName === 'string' && fieldName.length !== 0) {
-          if (!whereFlag && !orWhereFlag) {
+      if (typeof fieldName === 'string' && fieldName.length !== 0) {
+        if (deleteFlagStatus) {
+          wherePar = [];
+          wherePar.push(`WHERE`);
+          wherePar.push(fieldName);
+        }
+        else if (selectFlagStatus) {
+          if (!whereFlagStatus && !orWhereFlagStatus) {
             wherePar.push(`WHERE`);
             wherePar.push(fieldName);
           }
-          else if ((whereFlag && !orWhereFlag) || (!whereFlag && orWhereFlag) || (whereFlag && orWhereFlag)) {
+          else if ((whereFlagStatus && !orWhereFlagStatus) || (!whereFlagStatus && orWhereFlagStatus) || (whereFlagStatus && orWhereFlagStatus)) {
             wherePar.push(`AND`);
             wherePar.push(fieldName);
           }
-          whereFlag = true;
+          whereFlagStatus = true;
           notFlagStatus = false;
-          return methodsForCondition;
+        }
+        else if (deleteFlagStatus) {
+          debugger
+          wherePar = [];
+          wherePar.push(`WHERE`);
+          wherePar.push(fieldName);
         }
         else {
-          throw new Error('not string or empty fieldName ');
         }
+        return methodsForCondition;
       }
       else {
-        return methodsForCondition;
+        throw new Error('not string or empty fieldName ');
       }
     },
     orWhere: (fieldName) => {
       if (typeof fieldName === 'string' && fieldName.length !== 0) {
-        if (!whereFlag && !orWhereFlag) {
+        if (!whereFlagStatus && !orWhereFlagStatus) {
           wherePar.push('WHERE');
           wherePar.push(fieldName);
         }
-        else if (orWhereFlag || whereFlag) {
+        else if (orWhereFlagStatus || whereFlagStatus) {
           wherePar.push('OR');
           wherePar.push(fieldName);
         }
         notFlagStatus = false;
-        orWhereFlag = true;
+        orWhereFlagStatus = true;
       }
       else {
         return new Error('not string or empty fieldName');
       }
       return methodsForCondition;
     },
+    insert: (tableName, fieldName) => {
+      let arr = [];
+      if (typeof tableName === 'string' && tableName.length !== 0) {
+        if (!insertFlagStatus) {
+          insertPar.push('INSERT INTO');
+          insertPar.push(tableName);
+          if (fieldName instanceof Array) {
+            let quotesValue;
+            for (let i = 0; i < fieldName.length; i++) {
+              if (typeof fieldName[i] === 'string') {
+                quotesValue = '\'';
+              }
+              else {
+                quotesValue = '';
+              }
+              if (i !== fieldName.length - 1) {
+                arr.push(`${quotesValue}${fieldName[i]}${quotesValue},`);
+              }
+              else {
+                arr.push(`${quotesValue}${fieldName[i]}${quotesValue}`);
+              }
+            }
+            insertPar.push(`(${arr.join(' ')})`);
+          }
+          insertFlagStatus = true;
+        }
+        else {
+          throw new Error('two insert methods');
+        }
+      }
+      else {
+        throw new Error('not string or empty fieldName');
+      }
+      return obj;
+    },
+    values: (fieldName) => {
+      if (fieldName instanceof Array) {
+        if (!deleteFlagStatus) {
+          if (!valuesFlagStatus) {
+            insertPar.push('VALUES');
+            let arr = [];
+            let quotesValue;
+            for (let i = 0; i < fieldName.length; i++) {
+              if (typeof fieldName[i] === 'string') {
+                quotesValue = '\'';
+              }
+              else {
+                quotesValue = '';
+              }
+              if (i !== fieldName.length - 1) {
+                arr.push(`${quotesValue}${fieldName[i]}${quotesValue},`);
+              }
+              else {
+                arr.push(`${quotesValue}${fieldName[i]}${quotesValue}`);
+              }
+            }
+            insertPar.push(`(${arr.join(' ')})`);
+            valuesFlagStatus = true;
+            return obj;
+          }
+          else {
+            throw new Error('two values methods');
+          }
+        }
+        else {
+          throw new Error(`values can't be called before delete`);
+        }
+      }
+      else {
+        throw new Error('fieldName not array type');
+      }
+    },
+    delete: (fieldName) => {
+      if (typeof fieldName === 'string' && fieldName.length !== 0) {
+        deletePar.push(`DELETE FROM ${fieldName}`);
+        deleteFlagStatus = true;
+      }
+      else {
+        throw new Error('not string or empty fieldName');
+      }
+      return obj;
+    },
     toString: () => {
       let arr = [];
       let str;
-      if (selectFlag) {
-        arr.push(...selectPar)
+      if (selectFlagStatus) {
+        arr.push(...selectPar);
       }
-      if (tableNameFlag && !fromFlag) {
+      if (tableNameFlagStatus && !fromFlagStatus) {
         if (fromPar.length === 0) {
           arr.push(`FROM`);
-          arr.push(`${quotes}${tableName}${quotes}`)
+          arr.push(`${quotes}${tableName}${quotes}`);
         }
         else {
           arr.push(...fromPar);
         }
       }
-      else if (fromFlag) {
+      else if (fromFlagStatus) {
         arr.push(...fromPar);
       }
-      if (whereFlag || orWhereFlag) {
+      if (whereFlagStatus || orWhereFlagStatus) {
         arr.push(...wherePar);
+      }
+      if (insertFlagStatus) {
+        arr = [];
+        arr.push(...insertPar);
+      }
+      if (deleteFlagStatus) {
+        arr = [];
+        arr.push(...deletePar);
+        if (deleteFlagStatus) {
+          arr.push(...wherePar);
+        }
       }
       str = `${arr.join(' ')};`;
       return str;
     }
   }
-  fromFlag = false;
-  whereFlag = false;
-  orWhereFlag = false
+  fromFlagStatus = false;
+  whereFlagStatus = false;
+  orWhereFlagStatus = false
   notFlagStatus = false;
-  selectFlag = false;
-  tableNameFlag = false;
+  selectFlagStatus = false;
+  tableNameFlagStatus = false;
   notFlagStatus = false;
+  insertFlagStatus = false;
+  valuesFlagStatus = false;
+  deleteFlagStatus = false;
   return obj;
 }
