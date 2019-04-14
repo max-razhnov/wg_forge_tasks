@@ -1,10 +1,9 @@
-/* eslint-disable max-statements */
 import test from 'tape-catch';
 
 import query from '../exercises/query';
 
-const QUERY_METHODS = ['select', 'from', 'where', 'orWhere', 'insert', 'values', 'delete', 'toString'].sort();
-const WHERE_METHODS = ['equals', 'in', 'gt', 'gte', 'lt', 'lte', 'between', 'isNull', 'not'].sort();
+const QUERY_METHODS = ['select', 'from', 'where', 'orWhere', 'insert', 'values', 'delete', 'toString'];
+const WHERE_METHODS = ['equals', 'in', 'gt', 'gte', 'lt', 'lte', 'between', 'isNull', 'not'];
 
 test('query', t => {
   t.equal(typeof query, 'function');
@@ -15,16 +14,16 @@ test('query', t => {
 
   const methods = Object.keys(q);
 
-  t.deepEqual(methods.sort(), QUERY_METHODS, '`query` has proper methods');
-  for (const method of methods) {
-    t.equal(typeof q[method], 'function', `where.${method} is a function`);
-  }
+  t.deepEqual(methods, QUERY_METHODS, '`query` has proper methods');
 
   const whereStmt = q.where('id');
 
-  t.deepEqual(Object.keys(whereStmt).sort(), WHERE_METHODS, '`where` has proper methods');
   for (const whereMethod of WHERE_METHODS) {
     t.equal(typeof whereStmt[whereMethod], 'function', `where.${whereMethod} is a function`);
+  }
+
+  for (const method of methods) {
+    t.equal(typeof q[method], 'function', `where.${method} is a function`);
   }
 
   t.test('generated SQL', qt => {
