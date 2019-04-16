@@ -3,13 +3,13 @@
  */
 export default function cloneDeep(srcObj) {
   let dst = {};
-  for (let key in srcObj) {
-    if (typeof srcObj[key] === 'object') {
+  Object.keys(srcObj).forEach((key) => {
+    if (srcObj[key] instanceof Object) {
       dst[key] = cloneDeep(srcObj[key]);
     }
     else {
       dst[key] = srcObj[key];
     }
-  }
+  });
   return dst;
 }
