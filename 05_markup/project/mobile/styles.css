@@ -1,0 +1,427 @@
+/*@font-face {*/
+/*font-family: 'font54aed71f7ac31ebb9b90bc5d41ba8837';*/
+
+/*src: url('https://nomail.com.ua/files/eot/54aed71f7ac31ebb9b90bc5d41ba8837.eot?#iefix') format('embedded-opentype'),*/
+/*url('https://nomail.com.ua/files/woff/54aed71f7ac31ebb9b90bc5d41ba8837.woff') format('woff'),*/
+/*url('https://nomail.com.ua/files/woff2/54aed71f7ac31ebb9b90bc5d41ba8837.woff2') format('woff2');*/
+/*}*/
+
+/*@font-face {*/
+/*font-family: 'WarHeliosCondCBold';*/
+/*src: local('WarHeliosCondCBold'), url('https://nomail.com.ua/files/woff/54aed71f7ac31ebb9b90bc5d41ba8837.woff') format('woff');*/
+/*}*/
+
+/*body {*/
+/*margin: 0;*/
+/*position: relative;*/
+/*}*/
+
+/*.header {*/
+/*height: 60px;*/
+/*position: absolute;*/
+/*top: 0;*/
+/*right: 0;*/
+/*bottom: 0;*/
+/*left: 0;*/
+/*background: rgba(0, 0, 0, 1);*/
+/*z-index: 1;*/
+/*}*/
+
+/*@media all and (min-width: 760px) {*/
+/*.header {*/
+/*background: rgba(0, 0, 0, 0.5);*/
+
+/*}*/
+/*}*/
+
+/*.display-none {*/
+/*display: none;*/
+/*}*/
+
+/*.title {*/
+/*text-align: center;*/
+/*color: #fff;*/
+/*font: 10px/normal 'WarHeliosCondCBold';*/
+/*position: relative;*/
+/*text-transform: uppercase;*/
+/*}*/
+
+/*.section_game .title {*/
+/*bottom: 8px;*/
+/*}*/
+
+/*.section_tanks .title {*/
+/*bottom: 7px;*/
+/*}*/
+
+/*.title-primary {*/
+/*display: block;*/
+/*font-size: 24px;*/
+/*letter-spacing: 4px;*/
+/*}*/
+
+/*.section__open .article {*/
+/*display: block;*/
+/*}*/
+
+/*.footer {*/
+/*display: none;*/
+/*}*/
+
+/*.invisible {*/
+/*color: transparent;*/
+/*font: 0/0 a;*/
+/*}*/
+
+/*.intro {*/
+/*font: 10px/normal 'WarHeliosCondCBold';*/
+/*color: #fff;*/
+/*}*/
+
+/*.bg {*/
+/*position: absolute;*/
+/*top: 60px;*/
+/*right: 0;*/
+/*bottom: 0;*/
+/*left: 0;*/
+/*}*/
+
+/*@media all and (min-width: 760px) {*/
+/*.bg {*/
+/*top: 0;*/
+/*}*/
+/*}*/
+
+/*.bg_game {*/
+/*background: url("../img/grass.webp"),*/
+/*url("../img/grass.webp") repeat 150px 200px,*/
+/*url("../img/grass.webp") repeat 50px 100px;*/
+
+/*position: absolute;*/
+/*top: 0;*/
+/*right: 0;*/
+/*bottom: 67%;*/
+/*left: 0;*/
+/*mask: url("../img/mask_mob.gif") bottom left repeat-x;*/
+
+/*}*/
+
+/*.bg_tanks {*/
+/*background: url("../img/sand.webp") repeat 50px 100px,*/
+/*url("../img/sand.webp") repeat 150px 200px,*/
+/*url("../img/sand.webp");*/
+/*position: absolute;*/
+/*top: 33%;*/
+/*right: 0;*/
+/*bottom: 33%;*/
+/*left: 0;*/
+/*}*/
+
+/*.bg_power {*/
+/*background: url("../img/dust.webp") repeat 150px 200px,*/
+/*url("../img/dust.webp"),*/
+/*url("../img/dust.webp") repeat 50px 100px;*/
+/*position: absolute;*/
+/*top: 67%;*/
+/*right: 0;*/
+/*bottom: 0;*/
+/*left: 0;*/
+/*mask: url("../img/mask_mob.gif") top left repeat-x;*/
+/*}*/
+
+/*.main {*/
+/*box-sizing: border-box;*/
+/*display: grid;*/
+/*grid-template-rows: 1fr 1fr 1fr;*/
+/*padding-top: 60px;*/
+/*position: relative;*/
+/*min-height: 100vh;*/
+/*}*/
+
+/*.logo-container {*/
+/*display: flex;*/
+/*flex-direction: column;*/
+/*align-items: center;*/
+/*justify-content: center;*/
+/*width: 100%;*/
+/*height: 100%;*/
+/*}*/
+
+/*.section-header_container {*/
+/*display: flex;*/
+/*flex-direction: column;*/
+/*align-items: center;*/
+/*justify-content: center;*/
+/*width: 100%;*/
+/*height: 100%;*/
+/*}*/
+
+/*.nav-mobile {*/
+/*width: 100%;*/
+/*height: 100%;*/
+/*display: flex;*/
+/*justify-content: space-around;*/
+/*align-items: center;*/
+/*}*/
+
+/*.bg-about-game {*/
+/*display: grid;*/
+/*grid-template-columns: 1fr 1fr 1fr;*/
+/*}*/
+
+/*.bg-game_wot {*/
+/*background: url("../img/s1-tanks_res.webp");*/
+/*grid-column-start: 1;*/
+/*grid-column-end: 2;*/
+/*}*/
+
+@font-face {
+    font-family: 'font54aed71f7ac31ebb9b90bc5d41ba8837';
+
+    src: url('https://nomail.com.ua/files/eot/54aed71f7ac31ebb9b90bc5d41ba8837.eot?#iefix') format('embedded-opentype'),
+    url('https://nomail.com.ua/files/woff/54aed71f7ac31ebb9b90bc5d41ba8837.woff') format('woff'),
+    url('https://nomail.com.ua/files/woff2/54aed71f7ac31ebb9b90bc5d41ba8837.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: WarHeliosCondCBold;
+    src: url("../fonts/WarHeliosCondCBold Regular.otf") format("otf");
+}
+
+body {
+    margin: 0;
+    position: relative;
+}
+
+.header {
+    height: 60px;
+    background: rgba(0, 0, 0, 1);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+}
+
+/*.header__menu:hover,*/
+/*.header__logo:hover,*/
+/*.header__search:hover {*/
+/*cursor: pointer;*/
+/*}*/
+
+/*.header__menu {*/
+/*width: 25px;*/
+/*height: 20px;*/
+/*background: url("../img/menu.svg") no-repeat;*/
+/*}*/
+
+/*.header__logo {*/
+/*width: 30px;*/
+/*height: 40px;*/
+/*background: url("../img/wot_logo_header.svg") no-repeat;*/
+/*background-size: cover;*/
+/*}*/
+
+/*.header__search {*/
+/*width: 23px;*/
+/*height: 23px;*/
+/*background: url("../img/search.svg");*/
+/*}*/
+
+
+@media all and (min-width: 760px) {
+    .header {
+        background: rgba(0, 0, 0, .5);
+    }
+}
+
+.main-nav {
+    display: none;
+}
+
+.search {
+    display: none;
+}
+
+.main-button {
+    display: none;
+}
+
+.page-nav {
+    display: none;
+}
+
+.article {
+    display: none;
+}
+
+.section__open .article {
+    display: block;
+}
+
+.footer {
+    display: none;
+}
+
+.invisible {
+    /*position: absolute;*/
+    /*z-index: 10;*/
+    color: #fff;
+    font: 18px/normal 'WarHeliosCondCBold';
+    letter-spacing: 3.6px;
+    text-align: left;
+    text-transform: uppercase;
+    /*color: transparent;*/
+    /*font: 0/0 a;*/
+}
+
+.intro {
+    display: none;
+}
+
+.bg {
+    position: absolute;
+    top: 60px;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+@media all and (min-width: 760px) {
+    .bg {
+        top: 0;
+    }
+}
+
+.bg_game {
+    background: url("../img/grass.webp"),
+    url("../img/grass.webp") repeat 150px 200px,
+    url("../img/grass.webp") repeat 50px 100px;
+    position: absolute;
+    top: 0;
+    bottom: 67%;
+    right: 0;
+    left: 0;
+    mask: url("../img/mask_mob.gif") bottom left repeat-x;
+}
+
+.bg_power {
+    background: url("../img/dust.webp") repeat 150px 200px,
+    url("../img/dust.webp"),
+    url("../img/dust.webp") repeat 50px 100px;
+    position: absolute;
+    top: 67%;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    mask: url("../img/mask_mob.gif") top left repeat-x;
+}
+
+.bg_tanks {
+    background: url("../img/sand.webp") repeat 50px 100px,
+    url("../img/sand.webp") repeat 150px 200px,
+    url("../img/sand.webp");
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+.bg__game .bg_tanks,
+.bg__game .bg_power {
+    display: none;
+}
+
+.bg__game .bg_game {
+    bottom: 0;
+    mask: none;
+}
+
+.main {
+    box-sizing: border-box;
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    padding-top: 60px;
+    position: relative;
+    min-height: 100vh;
+}
+
+.title {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    /*justify-content: center;*/
+    align-items: center;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 4.8px;
+    font: 24px/normal 'WarHeliosCondCBold';
+}
+
+.title > span {
+    letter-spacing: 1.9px;
+    font-size: 9.5px;
+}
+
+.bg_tanks__img {
+    width: 80px;
+    height: 80px;
+    background: url("../img/the-tank.png") no-repeat;
+    background-size: cover;
+}
+
+.bg_game__img {
+    width: 90px;
+    height: 80px;
+    background: url("../img/the-game.png") no-repeat;
+    background-size: cover;
+}
+
+.bg_power__img {
+    width: 80px;
+    height: 80px;
+    background: url("../img/the-power.png") no-repeat;
+    background-size: cover;
+}
+
+
+.bg_tanks,
+.bg_game,
+.bg_power {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.section__game,
+.section__tank,
+.section__power {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main__game .section__tank,
+.main__game .section__power {
+    display: none;
+}
+
+.menu__open {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.menu__open > i {
+    color: #fff;
+}
