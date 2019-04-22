@@ -22,20 +22,31 @@ body {
     align-items: center;
 }
 
+.header__menu:hover,
+.header__logo:hover,
+.header__search:hover {
+    cursor: pointer;
+}
+
 .header__menu {
     width: 25px;
     height: 20px;
+    background: url("../img/menu.svg") no-repeat;
 }
 
 .header__logo {
     width: 30px;
     height: 40px;
+    background: url("../img/wot_logo_header.svg") no-repeat;
+    background-size: cover;
 }
 
 .header__search {
     width: 23px;
     height: 23px;
+    background: url("../img/search.svg");
 }
+
 
 @media all and (min-width: 760px) {
     .header {
@@ -168,17 +179,24 @@ body {
 .bg_tanks__img {
     width: 80px;
     height: 80px;
+    background: url("../img/the-tank.png") no-repeat;
+    background-size: cover;
 }
 
 .bg_game__img {
     width: 90px;
     height: 80px;
+    background: url("../img/the-game.png") no-repeat;
+    background-size: cover;
 }
 
 .bg_power__img {
     width: 80px;
     height: 80px;
+    background: url("../img/the-power.png") no-repeat;
+    background-size: cover;
 }
+
 
 .bg_tanks,
 .bg_game,
