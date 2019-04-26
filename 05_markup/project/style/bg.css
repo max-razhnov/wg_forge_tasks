@@ -18,7 +18,7 @@
                 url("../img/grass.webp") repeat 150px 200px,
                 url("../img/grass.webp") repeat 50px 100px;
     mask: url("../img/mask_mob.gif") repeat-x bottom;
-    position: absolute;
+    position: absolute;                      
     top: 0;
     left: 0;
     right: 0;
