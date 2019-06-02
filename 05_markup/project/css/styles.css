@@ -1,0 +1,280 @@
+@font-face {
+    font-family: WarHeliosCondCBold;
+    src: url("../fonts/WarHeliosCondCBold Regular.otf") format("otf");
+}
+
+body {
+    margin: 0;
+    position: relative;
+}
+
+.header {
+    height: 60px;
+    background: rgba(0, 0, 0, 1);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.header__menu:hover,
+.header__logo:hover,
+.header__search:hover {
+    cursor: pointer;
+}
+
+.header__menu {
+    width: 25px;
+    height: 20px;
+    background: url("../img/menu.svg") no-repeat;
+}
+
+.header__logo {
+    width: 30px;
+    height: 40px;
+    background: url("../img/wot_logo_header.svg") no-repeat;
+    background-size: cover;
+}
+
+.header__search {
+    width: 23px;
+    height: 23px;
+    background: url("../img/search.svg");
+}
+
+
+@media all and (min-width: 760px) {
+    .header {
+        background: rgba(0, 0, 0, .5);
+    }
+
+}
+
+.main-nav {
+    display: none;
+}
+
+.search {
+    display: none;
+}
+
+.main-button {
+    display: none;
+}
+
+.page-nav {
+    display: none;
+}
+
+.article {
+    display: none;
+}
+
+.section__open .article {
+    display: block;
+}
+
+.footer {
+    display: none;
+}
+
+.invisible {
+    color: transparent;
+    font: 0/0 a;
+}
+
+.intro {
+    display: none;
+}
+
+.bg {
+    position: absolute;
+    top: 60px;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+@media all and (min-width: 760px) {
+    .bg {
+        top: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .tank {
+        overflow: hidden;
+        position: absolute;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+    }
+
+    .tank_wrapper {
+        height: 100vh;
+        width: 100vw;
+        transform-origin: left bottom;
+        position: absolute;
+        left: 0;
+        transform: rotate(0) translate3d(0, 0, 0);
+        transition: transform 2s ease;
+        /*mb 0s*/
+    }
+
+    .tank_vechicle {
+        position: absolute;
+        top: -25%;
+        left: 0;
+        margin: 0;
+        background: url("../img/tank.webp") no-repeat;
+    }
+
+    .tank_turret {
+        background: url("../img/turret.webp") no-repeat 0 20px,
+        url("../img/turret-shadow.webp") no-repeat 10px 0;
+        height: 547px;
+        left: 0;
+        margin: auto;
+        position: absolute;
+        right: 0;
+        top: -32%;
+        transform-origin: 50% -75%;
+        transition: transform 3s ease;
+    }
+
+    .tank_turret__left {
+        transform: rotate(-40deg)
+    }
+
+    .tank_turret__right {
+        transform: rotate(40deg);
+    }
+
+    .tank_turret__center {
+        transform: rotate(0deg);
+    }
+
+
+    .toggle .tank_wrapper {
+        transform: rotate(-90deg) translate3d(0, -50vw, 0);
+    }
+}
+
+.bg_game {
+    background: url("../img/grass.webp"),
+    url("../img/grass.webp") repeat 150px 200px,
+    url("../img/grass.webp") repeat 50px 100px;
+    position: absolute;
+    top: 0;
+    bottom: 67%;
+    right: 0;
+    left: 0;
+    mask: url("../img/mask_mob.gif") bottom left repeat-x;
+}
+
+.bg_power {
+    background: url("../img/dust.webp") repeat 150px 200px,
+    url("../img/dust.webp"),
+    url("../img/dust.webp") repeat 50px 100px;
+    position: absolute;
+    top: 67%;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    mask: url("../img/mask_mob.gif") top left repeat-x;
+}
+
+.bg_tanks {
+    background: url("../img/sand.webp") repeat 50px 100px,
+    url("../img/sand.webp") repeat 150px 200px,
+    url("../img/sand.webp");
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+.bg__game .bg_tanks,
+.bg__game .bg_power {
+    display: none;
+}
+
+.bg__game .bg_game {
+    bottom: 0;
+    mask: none;
+}
+
+.main {
+    box-sizing: border-box;
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    padding-top: 60px;
+    position: relative;
+    min-height: 100vh;
+}
+
+.title {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 4.8px;
+    font: 24px/normal 'WarHeliosCondCBold';
+}
+
+.title > span {
+    letter-spacing: 1.9px;
+    font-size: 9.5px;
+}
+
+.bg_tanks__img {
+    width: 80px;
+    height: 80px;
+    background: url("../img/the-tank.png") no-repeat;
+    background-size: cover;
+}
+
+.bg_game__img {
+    width: 90px;
+    height: 80px;
+    background: url("../img/the-game.png") no-repeat;
+    background-size: cover;
+}
+
+.bg_power__img {
+    width: 80px;
+    height: 80px;
+    background: url("../img/the-power.png") no-repeat;
+    background-size: cover;
+}
+
+
+.bg_tanks,
+.bg_game,
+.bg_power {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.section__game,
+.section__tank,
+.section__power {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main__game .section__tank,
+.main__game .section__power {
+    display: none;
+}
