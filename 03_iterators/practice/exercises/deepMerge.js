@@ -27,5 +27,18 @@
  * //    }
  */
 export default function deepMerge(destinationObject, sourceObject) {
-  // ¯\_(ツ)_/¯
+  Object.keys(sourceObject).forEach((key) => {
+    if (sourceObject[key] instanceof Object) {
+      destinationObject[key] = deepMerge(destinationObject[key], sourceObject[key])
+    }
+    else {
+      if (destinationObject) {
+        destinationObject[key] = sourceObject[key]
+      }
+      else {
+        destinationObject = sourceObject;
+      }
+    }
+  })
+  return destinationObject;
 }
